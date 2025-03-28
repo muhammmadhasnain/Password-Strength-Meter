@@ -1,8 +1,36 @@
-import streamlit as st
+import streamlit as st # type: ignore
 import re
 import random
 import string
-from passlib.pwd import genword
+from passlib.pwd import genword # type: ignore
+
+
+
+def password_generator(length , use_digits , use_special):
+    charactors = string.ascii_letters
+
+    if use_digits:
+        charactors += string.digits
+
+    if use_special:
+        charactors += string.punctuation
+
+    return "".join(random.choice(charactors) for _ in range(length))
+
+
+st.title("Password Generator")
+
+length = st.slider("Select password lenght", min_value = 6 , max_value = 32 , value = 12)
+
+use_digits = st.checkbox("include Digits")
+
+use_specials = st.checkbox("include Special Charactors")
+
+
+if st.button("Generated this password"):
+    strong_password = password_generator(length , use_digits , use_specials)
+    st.write(f"💡 Suggested Password : {strong_password}")
+
 
 COMMEN_PASSWORD = {"password", "123456", "password123", "qwerty", "admin", "letmein", "12345678", "abc123"}
 
@@ -39,8 +67,6 @@ def check_password_strength(password):
 
     return score, feedback
 
-def password_generator():
-    return genword(length=12 , charset="ascii_72")
 
 st.title("🔒 Password Strength Meter")
 
@@ -66,6 +92,3 @@ if password:
         st.success("🎉 Your password is strong and secure!")
 
 
-if st.button("Generated this password"):
-    strong_password = password_generator()
-    st.write(f"💡 Suggested Password : {strong_password}")
